@@ -143,13 +143,18 @@ QString QLCFile::errorString(QFile::FileError error)
     }
 }
 
+#include <string.h>
+
 QString QLCFile::currentUserName()
 {
 #if defined(WIN32) || defined(Q_OS_WIN)
     DWORD length = UNLEN + 1;
-    TCHAR name[length];
-    if (GetUserName(name, &length))
-        return QString::fromUtf16(reinterpret_cast<char16_t*>(name));
+
+    std::wstring name;
+    name.resize(length);
+
+    if (GetUserName(&name[0], &length))
+        return QString::fromUtf16((ushort*)&name[0]);
     else
         return QString("Unknown windows user");
 #else
