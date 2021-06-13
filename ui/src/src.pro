@@ -4,6 +4,7 @@ include(../../coverage.pri)
 TEMPLATE = lib
 LANGUAGE = C++
 TARGET   = qlcplusui
+CONFIG += staticlib
 
 CONFIG += qt
 QT     += core gui widgets
@@ -21,7 +22,14 @@ INCLUDEPATH     += ../../engine/src ../../engine/audio/src
 win32: INCLUDEPATH += ../../hotplugmonitor/src
 DEPENDPATH      += ../../engine/src
 QMAKE_LIBDIR    += ../../engine/src
-LIBS            += -lqlcplusengine
+QMAKE_LIBDIR    += ../../engine/audio/src
+QMAKE_LIBDIR    += ../../hotplugmonitor/src
+LIBS            += -L../../engine/src -lqlcplusengine
+LIBS            += -L../../engine/audio/src -lqlcplusaudio
+LIBS            += -L../../hotplugmonitor/src -lhotplugmonitor
+
+include(../../fftw.pri)
+
 win32:QMAKE_LFLAGS += -shared
 
 # Types

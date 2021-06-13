@@ -39,11 +39,7 @@ CONFIG(ftd2xx) {
     # Use forward slashes '/' instead of Windows backslashes '\\' for paths here!
 
     win32 {
-        # Windows target
-        FTD2XXDIR    = C:/projects/D2XXSDK
-        LIBS        += -L$$FTD2XXDIR/i386 -lftd2xx
-        LIBS     += $$FTD2XXDIR/i386/libftd2xx.a
-        INCLUDEPATH += $$FTD2XXDIR
+	    include (../../../ftd2xx.pri)
         QMAKE_LFLAGS += -shared
     }
     DEFINES     += FTD2XX
