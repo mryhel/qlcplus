@@ -57,7 +57,8 @@ lessThan(QT_MAJOR_VERSION, 6) {
   SOURCES += audiorenderer_qt6.cpp audiocapture_qt6.cpp
 }
 
-!android:!ios {
+include(../../../fftw.pri)
+!android:!ios:!win32 {
   system(pkg-config --exists fftw3) {
     DEFINES += HAS_FFTW3
     PKGCONFIG += fftw3

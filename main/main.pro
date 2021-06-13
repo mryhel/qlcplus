@@ -4,6 +4,8 @@ TEMPLATE = app
 LANGUAGE = C++
 TARGET   = qlcplus
 
+QT += multimedia script network multimediawidgets
+
 INCLUDEPATH  += ../ui/src ../ui/src/virtualconsole
 INCLUDEPATH  += ../engine/src
 INCLUDEPATH  += ../webaccess/src
@@ -14,6 +16,22 @@ QMAKE_LIBDIR += ../webaccess/src
 LIBS         += -lqlcplusengine
 LIBS         += -lqlcplusui
 LIBS         += -lqlcpluswebaccess
+
+QMAKE_LIBDIR    += ../engine/src
+QMAKE_LIBDIR    += ../engine/audio/src
+QMAKE_LIBDIR    += ../hotplugmonitor/src
+QMAKE_LIBDIR    += ../ui/src
+QMAKE_LIBDIR    += ../webaccess/src
+LIBS            += -L../engine/src -lqlcplusengine
+LIBS            += -L../engine/audio/src -lqlcplusaudio
+LIBS            += -L../hotplugmonitor/src -lhotplugmonitor
+LIBS            += -L../ui/src -lqlcplusui
+LIBS            += -L../webaccess/src -lqlcpluswebaccess
+
+RESOURCES += ../ui/src/qlcui.qrc
+RESOURCES += ../launcher/launcher.qrc
+
+include(../fftw.pri)
 
 win32:HEADERS += ../ui/src/debugbox.h
 macx:HEADERS += ../ui/src/debugbox.h

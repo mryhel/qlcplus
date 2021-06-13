@@ -3,8 +3,8 @@ TEMPLATE = subdirs
 !android:!ios {
 
  SUBDIRS              += dmxusb
- SUBDIRS              += peperoni
- SUBDIRS              += udmx
+ #SUBDIRS              += peperoni
+ #SUBDIRS              += udmx
  SUBDIRS              += midi
  unix {
    system(pkg-config --exists libola) {
@@ -14,16 +14,19 @@ TEMPLATE = subdirs
    }
  }
  !macx:!win32:SUBDIRS += dmx4linux
- SUBDIRS              += velleman
- SUBDIRS              += enttecwing
+ #SUBDIRS              += velleman
+ #SUBDIRS              += enttecwing
  SUBDIRS              += hid
  !macx:!win32:SUBDIRS += spi
- SUBDIRS              += os2l
+
+ greaterThan(QT_MAJOR_VERSION, 4) {
+ #SUBDIRS              += os2l
  #!macx:!win32:SUBDIRS += uart
  #!macx:!win32:SUBDIRS += gpio
+ }
 }
 
 SUBDIRS              += artnet
-SUBDIRS              += E1.31
+#SUBDIRS              += E1.31
 SUBDIRS              += loopback
-SUBDIRS              += osc
+#SUBDIRS              += osc

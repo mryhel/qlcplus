@@ -5,15 +5,17 @@ TEMPLATE = subdirs
 SUBDIRS        += hotplugmonitor
 SUBDIRS        += engine
 
+QT += c++17
+
 qmlui: {
   message("Building QLC+ 5 QML UI")
-  SUBDIRS      += qmlui
+  #SUBDIRS      += qmlui
 } else {
   message("Building QLC+ 4 QtWidget UI")
   SUBDIRS      += ui
   SUBDIRS      += webaccess
   SUBDIRS      += main
-  SUBDIRS      += fixtureeditor
+  #SUBDIRS      += fixtureeditor
   macx:SUBDIRS += launcher
 }
 SUBDIRS        += resources

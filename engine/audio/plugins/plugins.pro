@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 CONFIG  += ordered
 
-!android:!ios {
+!android:!ios:!win32 {
 #system(pkg-config --exists mad) {
 #  SUBDIRS += mad
 #}

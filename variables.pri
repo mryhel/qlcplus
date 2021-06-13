@@ -16,10 +16,15 @@ qmlui:  APPVERSION = 5.0.0 GIT
 #############################################################################
 
 # Treat all compiler warnings as errors
-QMAKE_CXXFLAGS += -Werror
+#QMAKE_CXXFLAGS += -Werror
 unix:QMAKE_CFLAGS += -Werror
 
 CONFIG         += warn_on
+
+win32: {
+    LIBS += -luser32
+    LIBS += -ladvapi32
+}
 
 # Mobile platforms are QML only
 android|ios: CONFIG += qmlui
@@ -43,7 +48,7 @@ contains(FORCECONFIG, release) {
   CONFIG         -= debug
 }
 
-!macx:!ios: {
+!macx:!ios:!win32 {
  system( g++ --version | grep -e "4.6.[0-9]" ) {
    #message("g++ version 4.6 found")
    QMAKE_CXXFLAGS += -Wno-error=strict-overflow

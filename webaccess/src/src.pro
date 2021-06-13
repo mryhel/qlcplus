@@ -4,6 +4,7 @@ include(../../coverage.pri)
 TEMPLATE = lib
 LANGUAGE = C++
 TARGET   = qlcpluswebaccess
+CONFIG += staticlib
 
 CONFIG += qt
 QT     += core gui network
@@ -21,6 +22,17 @@ INCLUDEPATH     += ../../ui/src ../../ui/src/virtualconsole
 DEPENDPATH      += ../../engine/src ../../ui/src
 QMAKE_LIBDIR    += ../../engine/src ../../ui/src
 DEFINES         += USE_WEBSOCKET NO_SSL
+
+
+QMAKE_LIBDIR    += ../../engine/src
+QMAKE_LIBDIR    += ../../engine/audio/src
+QMAKE_LIBDIR    += ../../hotplugmonitor/src
+QMAKE_LIBDIR    += ../../ui/src
+LIBS            += -L../../engine/src -lqlcplusengine
+LIBS            += -L../../engine/audio/src -lqlcplusaudio
+LIBS            += -L../../hotplugmonitor/src -lhotplugmonitor
+LIBS            += -L../../ui/src -lqlcplusui
+include(../../fftw.pri)
 
 lessThan(QT_MAJOR_VERSION, 5) {
   macx {
