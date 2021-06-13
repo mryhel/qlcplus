@@ -262,7 +262,10 @@ void PreviewThread::run()
 
         // 2- decode the whole file and fill a QPixmap with a sample block RMS value for each pixel
         qint64 dataRead = 1;
-        unsigned char audioData[onePixelReadLen * 4];
+
+        std::string audioData;
+        audioData.resize(onePixelReadLen * 4);
+
         quint32 audioDataOffset = 0;
         QPixmap *preview = new QPixmap((50 * m_item->m_audio->totalDuration()) / 1000, 76);
         preview->fill(Qt::transparent);
@@ -284,7 +287,7 @@ void PreviewThread::run()
             quint32 tmpExceedData = 0;
             if (audioDataOffset < onePixelReadLen)
             {
-                dataRead = ad->read((char *)audioData + audioDataOffset, onePixelReadLen * 2);
+                dataRead = ad->read(&audioData[audioDataOffset], onePixelReadLen * 2);
                 if (dataRead > 0)
                 {
                     if ((quint32)dataRead + audioDataOffset >= onePixelReadLen)
@@ -317,7 +320,7 @@ void PreviewThread::run()
                 {
                     if (left)
                     {
-                        qint32 sampleVal = getSample(audioData, i, sampleSize);
+                        qint32 sampleVal = getSample((unsigned char *)&audioData[0], i, sampleSize);
                         rmsLeft += (sampleVal * sampleVal);
                     }
                     i += sampleSize;
@@ -326,7 +329,7 @@ void PreviewThread::run()
                     {
                         if (right)
                         {
-                            qint32 sampleVal = getSample(audioData, i, sampleSize);
+                            qint32 sampleVal = getSample((unsigned char *)&audioData[0], i, sampleSize);
                             rmsRight += (sampleVal * sampleVal);
                         }
                         i += sampleSize;
@@ -380,7 +383,7 @@ void PreviewThread::run()
                 if (tmpExceedData > 0)
                 {
                     //qDebug() << "Exceed data found: " << tmpExceedData;
-                    memmove(audioData, audioData + onePixelReadLen, tmpExceedData);
+                    memmove(&audioData[0], &audioData[onePixelReadLen], tmpExceedData);
                     audioDataOffset = tmpExceedData;
                 }
                 else
