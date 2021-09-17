@@ -265,7 +265,7 @@ unix:!macx:METAINFODIR = $$INSTALLROOT/share/metainfo
 # man
 unix:!macx:MANDIR = share/man/man1/
 
-unix:!macx: {
+unix:!macx:!win32 {
   QTPREFIX = $$[QT_INSTALL_PREFIX]
   IN_USR = $$find(QTPREFIX, "/usr")
   count(IN_USR, 1) {
