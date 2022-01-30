@@ -26,7 +26,9 @@
 #include <QLabel>
 #include <QUrl>
 
-//#include <unistd.h>
+#ifndef _MSC_VER
+#include <unistd.h>
+#endif //_MSC_VER
 
 #include "qlcconfig.h"
 #include "qlcfile.h"
