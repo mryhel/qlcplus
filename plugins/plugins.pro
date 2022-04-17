@@ -27,6 +27,6 @@ TEMPLATE = subdirs
 }
 
 SUBDIRS              += artnet
-#SUBDIRS              += E1.31
+SUBDIRS              += E1.31
 SUBDIRS              += loopback
 #SUBDIRS              += osc
