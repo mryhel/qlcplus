@@ -87,11 +87,10 @@ void ArtNetPacketizer::setupArtNetPollReply(QByteArray &data, QHostAddress ipAdd
     data.append((char)0xF0);     // Status1 - Ready and booted
     data.append((char)0xFF);     // ESTA Manufacturer MSB
     data.append((char)0xFF);     // ESTA Manufacturer LSB
-
-    data.append("QLC+");   // Short Name
+    data.append("QuasarSpot");   // Short Name
     for (i = 0; i < 14; i++)
         data.append((char)0x00); // 14 bytes of stuffing
-    data.append("Q Light Controller Plus - ArtNet interface"); // Long Name
+    data.append("QuasarSpot ArtNet interface"); // Long Name
     for (i = 0; i < 22; i++) // 64-42 bytes of stuffing. 42 is the length of the long name
         data.append((char)0x00);
 

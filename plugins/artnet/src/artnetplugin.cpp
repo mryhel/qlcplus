@@ -188,6 +188,8 @@ bool ArtNetPlugin::openOutput(quint32 output, quint32 universe)
                                                             output, this);
         connect(controller, SIGNAL(valueChanged(quint32,quint32,quint32,uchar)),
                 this, SIGNAL(valueChanged(quint32,quint32,quint32,uchar)));
+        connect(controller, SIGNAL(universeDataReceived(quint32,quint32,const QByteArray &,const QHostAddress &)),
+                this, SIGNAL(universeDataReceived(quint32,quint32,const QByteArray &,const QHostAddress &)));
         connect(controller, SIGNAL(rdmValueChanged(quint32, quint32, QVariantMap)),
                 this , SIGNAL(rdmValueChanged(quint32, quint32, QVariantMap)));
         m_IOmapping[output].controller = controller;
@@ -257,6 +259,9 @@ bool ArtNetPlugin::openInput(quint32 input, quint32 universe)
                                                             input, this);
         connect(controller, SIGNAL(valueChanged(quint32,quint32,quint32,uchar)),
                 this, SIGNAL(valueChanged(quint32,quint32,quint32,uchar)));
+        connect(controller, SIGNAL(universeDataReceived(quint32,quint32,const QByteArray &,const QHostAddress &)),
+                this, SIGNAL(universeDataReceived(quint32,quint32,const QByteArray &,const QHostAddress &)));
+
         m_IOmapping[input].controller = controller;
     }
 
@@ -357,7 +362,13 @@ void ArtNetPlugin::setParameter(quint32 universe, quint32 line, Capability type,
     else // if (type == Output)
     {
         if (name == ARTNET_OUTPUTIP)
-            unset = controller->setOutputIPAddress(universe, value.toString());
+        {
+            auto strVal = value.toString();
+
+            unset = controller->setOutputIPAddress(universe, strVal);
+
+            value = QVariant::fromValue(strVal);
+        }
         else if (name == ARTNET_OUTPUTUNI)
             unset = controller->setOutputUniverse(universe, value.toUInt());
         else if (name == ARTNET_TRANSMITMODE)
@@ -439,9 +450,16 @@ void ArtNetPlugin::slotReadyRead()
     }
 }
 
-void ArtNetPlugin::handlePacket(QByteArray const& datagram, QHostAddress const& senderAddress)
+void ArtNetPlugin::handlePacket(QByteArray const& datagram, QHostAddress const& sender)
 {
-    // A first filter: look for a controller on the same subnet as the sender.
+    auto senderAddress = sender;
+
+    if (senderAddress.protocol() != QAbstractSocket::IPv4Protocol)
+    {
+        senderAddress = QHostAddress(senderAddress.toIPv4Address());
+    }
+
+    // A firts filter: look for a controller on the same subnet as the sender.
     // This allows having the same ArtNet Universe on 2 different network interfaces.
     foreach (ArtNetIO io, m_IOmapping)
     {

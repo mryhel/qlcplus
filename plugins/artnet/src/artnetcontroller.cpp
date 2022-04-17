@@ -172,10 +172,10 @@ bool ArtNetController::setInputUniverse(quint32 universe, quint32 artnetUni)
     QMutexLocker locker(&m_dataMutex);
     m_universeMap[universe].inputUniverse = artnetUni;
 
-    return universe == artnetUni;
+    return false;
 }
 
-bool ArtNetController::setOutputIPAddress(quint32 universe, QString address)
+bool ArtNetController::setOutputIPAddress(quint32 universe, QString &address)
 {
     if (!m_universeMap.contains(universe))
         return false;
@@ -183,7 +183,9 @@ bool ArtNetController::setOutputIPAddress(quint32 universe, QString address)
     if (address.size() == 0)
     {
         m_universeMap[universe].outputAddress = m_broadcastAddr;
-        return true;
+        address = m_universeMap[universe].outputAddress.toString();
+
+        return false;
     }
 
     QMutexLocker locker(&m_dataMutex);
@@ -206,8 +208,9 @@ bool ArtNetController::setOutputIPAddress(quint32 universe, QString address)
     qDebug() << "[setOutputIPAddress] transmit to IP: " << hostAddress.toString();
 
     m_universeMap[universe].outputAddress = hostAddress;
+    address = m_universeMap[universe].outputAddress.toString();
 
-    return hostAddress == m_broadcastAddr;
+    return false;
 }
 
 bool ArtNetController::setOutputUniverse(quint32 universe, quint32 artnetUni)
@@ -423,6 +426,7 @@ bool ArtNetController::handleArtNetPollReply(QByteArray const& datagram, QHostAd
 
 bool ArtNetController::handleArtNetPoll(QByteArray const& datagram, QHostAddress const& senderAddress)
 {
+    return true;
     Q_UNUSED(datagram);
 
 #if _DEBUG_RECEIVED_PACKETS
@@ -471,21 +475,22 @@ bool ArtNetController::handleArtNetDmx(QByteArray const& datagram, QHostAddress 
             if (info.inputData.size() == 0)
                 info.inputData.fill(0, 512);
 
-#if _DEBUG_RECEIVED_PACKETS
-            qDebug() << "[ArtNet] -> universe" << (universe + 1);
-#endif
+//#if _DEBUG_RECEIVED_PACKETS
+//            qDebug() << "[ArtNet] -> universe" << (universe + 1);
+//#endif
 
-            for (int i = 0; i < dmxData.length(); i++)
-            {
-                if (info.inputData.at(i) != dmxData.at(i))
-                {
-#if _DEBUG_RECEIVED_PACKETS
-                    qDebug() << "[ArtNet] a value differs";
-#endif
-                    info.inputData.replace(i, 1, (const char *)(dmxData.data() + i), 1);
-                    emit valueChanged(universe, m_line, i, (uchar)dmxData.at(i));
-                }
-            }
+//            for (int i = 0; i < dmxData.length(); i++)
+//            {
+//                if (info.inputData.at(i) != dmxData.at(i))
+//                {
+//#if _DEBUG_RECEIVED_PACKETS
+//                    qDebug() << "[ArtNet] a value differs";
+//#endif
+//                    info.inputData.replace(i, 1, (const char *)(dmxData.data() + i), 1);
+//                    emit valueChanged(universe, m_line, i, (uchar)dmxData.at(i));
+//                }
+//            }
+            emit universeDataReceived(universe, m_line, dmxData, senderAddress);
             ++m_packetReceived;
             return true;
         }
@@ -529,7 +534,6 @@ bool ArtNetController::handlePacket(QByteArray const& datagram, QHostAddress con
 {
     //if (senderAddress.toIPv4Address() == m_ipAddr.toIPv4Address())
     //    return false;
-
 #if _DEBUG_RECEIVED_PACKETS
     qDebug() << "Received packet with size: " << datagram.size() << ", host: " << QHostAddress(senderAddress.toIPv4Address()).toString();
 #endif

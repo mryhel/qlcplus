@@ -123,6 +123,9 @@ public:
     /** Get a list of the available Input/Output lines */
     QList<ArtNetIO> getIOMapping();
 
+signals:
+    void universeDataReceived(quint32 universe, quint32 input, const QByteArray &data, const QHostAddress &senderAddress);
+
 private:
     /** Map of the ArtNet plugin Input/Output lines */
     QList<ArtNetIO> m_IOmapping;

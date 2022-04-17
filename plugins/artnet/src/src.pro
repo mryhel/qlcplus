@@ -5,6 +5,7 @@ TEMPLATE = lib
 LANGUAGE = C++
 TARGET   = artnet
 
+CONFIG += c++17
 QT      += network widgets
 
 CONFIG      += plugin
