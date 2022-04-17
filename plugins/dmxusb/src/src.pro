@@ -97,7 +97,7 @@ CONFIG(libftdi) {
     }
 }
 
-HEADERS += ../../interfaces/qlcioplugin.h
+HEADERS += ../../interfaces/qlcioplugin.h \
            ../../interfaces/rdmprotocol.h
 
 HEADERS += dmxusb.h \
