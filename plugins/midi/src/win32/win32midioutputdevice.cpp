@@ -105,8 +105,9 @@ void Win32MidiOutputDevice::writeUniverse(const QByteArray& universe)
     for (BYTE channel = 0; channel < MAX_MIDI_DMX_CHANNELS &&
                            channel < universe.size(); channel++)
     {
+        uchar dmxValue = uchar(universe[channel]);
         /* Scale 0-255 to 0-127 */
-        char scaled = DMX2MIDI(uchar(universe[channel]));
+        char scaled = DMX2MIDI(dmxValue);
 
         /* Since MIDI is so slow, we only send values that are
            actually changed. */
@@ -118,7 +119,7 @@ void Win32MidiOutputDevice::writeUniverse(const QByteArray& universe)
 
         if (mode() == Note)
         {
-            if (scaled == 0)
+            if (scaled == 0 && dmxValue == 0)
             {
                 /* Zero is sent as a note off command */
                 sendData(MIDI_NOTE_OFF | (BYTE) midiChannel(), channel, scaled);
