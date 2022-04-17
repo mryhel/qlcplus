@@ -101,8 +101,8 @@ E131Packetizer::E131Packetizer(QString MACaddr)
     m_commonHeader.append((char)0x02);
 
     // User Assigned Name of source !!must be 64 bytes long!!
-    QString sourceName("Q Light Controller Plus - E1.31");
-    m_commonHeader.append(sourceName.toUtf8());
+    QString sourceName("Quasar Spot E1.31");
+    m_commonHeader.append(sourceName.toLatin1());
     for (int i = 0; i < 64 - sourceName.length(); i++)
         m_commonHeader.append((char)0x00);
 

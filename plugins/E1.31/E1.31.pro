@@ -4,6 +4,8 @@ TEMPLATE = lib
 LANGUAGE = C++
 TARGET   = e131
 
+CONFIG += c++17
+
 QT      += network widgets
 
 CONFIG      += plugin
