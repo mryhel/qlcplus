@@ -106,7 +106,7 @@ public:
 
     /** Set a specific output IP address for the given QLC+ universe.
      *  Return true if this restores default output IP address */
-    bool setOutputIPAddress(quint32 universe, QString address);
+    bool setOutputIPAddress(quint32 universe, QString &address);
 
     /** Set a specific ArtNet output universe for the given QLC+ universe.
      *  Return true if this restores default output universe */
@@ -216,7 +216,7 @@ protected slots:
 
 signals:
     void valueChanged(quint32 universe, quint32 input, quint32 channel, uchar value);
-
+    void universeDataReceived(quint32 universe, quint32 input, const QByteArray &data, const QHostAddress &senderAddress);
     void rdmValueChanged(quint32 universe, quint32 line, QVariantMap data);
 };
 
