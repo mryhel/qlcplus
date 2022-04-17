@@ -162,15 +162,25 @@ void EnttecDMXUSBOpen::stop()
 
 void EnttecDMXUSBOpen::run()
 {
+    qDebug() << "EnttecDMXUSBOpen::run()=>";
+
     // Wait for device to settle in case the device was opened just recently
     // Also measure, whether timer granularity is OK
     QElapsedTimer time;
     time.start();
     usleep(1000);
     if (time.elapsed() > 3)
+    {
+        qDebug() << "EnttecDMXUSBOpen::run()=> m_granularity bad";
+
         m_granularity = Bad;
+    }
     else
+    {
+        qDebug() << "EnttecDMXUSBOpen::run()=> m_granularity good";
+
         m_granularity = Good;
+    }
 
     if (iface()->type() == DMXInterface::QtSerial)
     {
@@ -211,8 +221,8 @@ void EnttecDMXUSBOpen::run()
 framesleep:
         // Sleep for the remainder of the DMX frame time
         if (m_granularity == Good)
-            while (time.elapsed() < (m_frameTimeUs / 1000)) { usleep(1000); }
+            while (time.elapsed() < ( 2 * m_frameTimeUs / 1000)) { usleep(1000); }
         else
-            while (time.elapsed() < (m_frameTimeUs / 1000)) { /* Busy sleep */ }
+            while (time.elapsed() < (2 * m_frameTimeUs / 1000)) { /* Busy sleep */ }
     }
 }
