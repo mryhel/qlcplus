@@ -131,6 +131,8 @@ SOURCES += ../../midi/src/common/midiprotocol.cpp
 
 unix|macx: SOURCES += nanodmx.cpp euroliteusbdmxpro.cpp
 
+win32: LIBS += -lwinmm
+
 CONFIG(qtserial) {
     SOURCES += qtserial-interface.cpp
     HEADERS += qtserial-interface.h
